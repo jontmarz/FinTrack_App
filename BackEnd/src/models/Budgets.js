@@ -16,25 +16,25 @@ export const BudgetsSchema = new Schema({
     },
     totalIncome: {
         type: Number,
+        default: 0
+    },
+    totalExpense: {
+        type: Number,
+        default: 0
+    },
+    incomes: [{
+        type: Schema.Types.ObjectId,
+        ref: "Incomes",
+    }],
+    expenses: [{
+        type: Schema.Types.ObjectId,
+        ref: "Expenses",
+    }],
+    userId: {
+        type: Schema.Types.ObjectId,
+        ref: "user",
         required: true,
     },
-    categories: [
-        {
-            name: {
-                type: String,
-                required: true,
-            },
-            budgetedAmount: {
-                type: Number,
-                required: true,
-            },
-            spentAmount: {
-                type: Number,
-                required: true,
-                default: 0,
-            },
-        },
-    ],
     creationDate: {
         type: Date,
         default: Date.now,

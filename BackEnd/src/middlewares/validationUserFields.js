@@ -16,7 +16,7 @@ export const validationUserFields = (req, res, next) => {
     next();
 }
 
-export const userValidatorFields = [
+export const signupValidatorFields = [
     body('fullName', "Put your full name").trim().isString().notEmpty(), // Full Name
     body('email', "Put a valid email").trim().isEmail().normalizeEmail().notEmpty()
         .custom(async (value) => {
@@ -25,7 +25,7 @@ export const userValidatorFields = [
         }), // Email
     body('password', "Put a password with at least 8 characters").trim().isLength({ min: 8 }), // Password
     body('confirmPassword').custom((e, { req }) => {
-        if (e !== req.body.password) {
+        if (e !== req.body.repassword) {
             throw new Error("Passwords don't match");
         }
         return e;
@@ -35,6 +35,12 @@ export const userValidatorFields = [
 export const loginValidatorFields = [
     body('email', "Put a valid email").trim().isEmail().normalizeEmail().notEmpty(), // Email
     body('password', "Put a valid Password").trim(), // Password
+]
+
+export const userFields = [
+    body('fullName', "Put your full name").trim().isString().notEmpty(), // Full Name
+    body('email', "Put a valid email").trim().isEmail().normalizeEmail().notEmpty(), // Email
+    
 ]
 
 export const UserFields = []
