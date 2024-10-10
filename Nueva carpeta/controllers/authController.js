@@ -1,6 +1,6 @@
 import { Users } from '../models/Users.js'
 import { FinPer } from '../models/FinPer.js'
-import { generateJwt, decodeJwt } from '../config/jwtAuth.js'
+import { generateJwt, decodeJwt  } from '../config/jwt.js'
 
 // REGISTER USER FUNCTION
 export const singupUser = async (req, res) => {
@@ -16,15 +16,12 @@ export const singupUser = async (req, res) => {
                 code: 400,
                 message: "Email already in use"
             });
-        } else if (users.length === 0) {
-            if (request.role) delete request.role
-            // Create the superuser
-            request.role = 'SuperUser'
         } else {
-            // Create the user
-            request.role = 'User'
+            request.role = 'SuperUser'
         }
 
+        // Create the user
+        request.role = 'Subscriber'
         let user = new Users(request)
         await user.save()
 
@@ -157,11 +154,6 @@ export const logOutUser = () => {
         return res.status(210).json({
             code: 210,
             message: { ok: true}
-        })
-    } catch (e) {
-        return res.status(500).json({
-            code: 502,
-            message: e.message
         })
     }
 }

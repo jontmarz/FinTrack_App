@@ -1,4 +1,4 @@
-import mongoose, { Schema, model } from "mongoose"
+import { Schema, model } from "mongoose"
 
 export const BudgetsSchema = new Schema({
     userId: {
@@ -16,24 +16,29 @@ export const BudgetsSchema = new Schema({
     },
     totalIncome: {
         type: Number,
-        default: 0,
+        default: 0
     },
     totalExpense: {
         type: Number,
-        default: 0,
+        default: 0
     },
-    incomes: [
-        {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: "Incomes",
-        }
-    ],
-    expenses: [
-        {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: "Expenses",
-        }
-    ],
+    incomes: [{
+        type: Schema.Types.ObjectId,
+        ref: "Incomes",
+    }],
+    expenses: [{
+        type: Schema.Types.ObjectId,
+        ref: "Expenses",
+    }],
+    userId: {
+        type: Schema.Types.ObjectId,
+        ref: "user",
+        required: true,
+    },
+    creationDate: {
+        type: Date,
+        default: Date.now,
+    },
 })
 
 export const Budgets = model("Budgets", BudgetsSchema)

@@ -152,16 +152,11 @@ export const deleteUser = async (res, req) => {
 
 // LOGOUT USERS FUNCTION
 export const logOutUser = () => {
-    try {
+    /* try {
         res.clearCookie('refreshCookies')
         return res.status(210).json({
             code: 210,
             message: { ok: true}
         })
-    } catch (e) {
-        return res.status(500).json({
-            code: 502,
-            message: e.message
-        })
-    }
+    } */
 }
