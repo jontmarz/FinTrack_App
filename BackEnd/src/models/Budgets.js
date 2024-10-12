@@ -34,6 +34,6 @@ export const BudgetsSchema = new Schema({
             ref: "Expenses",
         }
     ],
-})
+}, { timestamps: true })
 
 export const Budgets = model("Budgets", BudgetsSchema)

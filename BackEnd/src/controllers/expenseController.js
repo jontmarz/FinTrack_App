@@ -1,15 +1,15 @@
-import { Expense } from "../models/Expense.js"
-import { Budget } from "../models/Budget.js"
+import { Expenses } from '../models/Expense.js'
+import { Budgets } from '../models/budgets.js'
 
 export const createExpense = async (req, res) => {
-    const { name, amount, budgetId } = req.body;
+    const { name, amount, budgetId, categoryId } = req.body;
     
     try {
-        const expense = new Expense({ name, amount, budgetId });
+        const expense = new Expenses({ name, amount, budgetId, categoryId });
         const save = await expense.save();
 
         // Update expense budget
-        const budget = await Budget.findById(budgetId)
+        const budget = await Budgets.findById(budgetId)
         budget.expenses.push(save._id)
         budget.totalExpense += amount
         await budget.save()
@@ -24,6 +24,7 @@ export const createExpense = async (req, res) => {
         return res.status(500).json({
             code: 503,
             message: e.message,
+            error: e
         });
     }
 }

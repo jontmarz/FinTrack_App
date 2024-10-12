@@ -1,11 +1,11 @@
 import { Incomes } from '../models/income.js'
-import { Budgets } from '../models/budget.js'
+import { Budgets } from '../models/budgets.js'
 
 export const createIncome = async (req, res) => {
-    const { name, amount, budgetId } = req.body;
+    const { name, amount, budgetId, categoryId } = req.body;
     
     try {
-        const newIncome = await Incomes.findById({ name, amount, budgetId })
+        const newIncome = await Incomes.findById({ name, amount, budgetId, categoryId })
         const save = await newIncome.save()
 
         // Update month budget
@@ -24,6 +24,7 @@ export const createIncome = async (req, res) => {
         return res.status(500).json({
             code: 502,
             message: e.message,
+            error: e
         });
     }
 }
