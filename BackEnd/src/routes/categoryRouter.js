@@ -1,12 +1,12 @@
 import express from "express"
-import { createGlobalCategory, createUserSubcategory, getGlobalCategories, getUserSubcategories } from "../controllers/CategoryController.js"
-import { validateCategoryFields, validateExpenseFields, validateIncomeFields } from "../middlewares/validationBudget.js"
+import { createGlobalCategory, createSubCategory, getGlobalCategories, getUserCateogories } from "../controllers/CategoryController.js"
+import { validateCategoryFields } from "../middlewares/validationBudget.js"
 
 const router = express.Router()
 
 router.put('/', validateCategoryFields, createGlobalCategory)
-router.put('/sub', validateCategoryFields, createUserSubcategory)
+router.put('/sub', validateCategoryFields, createSubCategory)
 router.get('/', validateCategoryFields, getGlobalCategories)
-router.get('/sub', validateCategoryFields, getUserSubcategories)
+router.get('/sub', validateCategoryFields, getUserCateogories)
 
 export default router

@@ -3,7 +3,8 @@ import { Users } from "../models/Users.js"
 
 export const middlewareToken = async(req, res, next) => {
     try {
-        const authHeader = req.headers.authorization;
+        const authHeader = req.headers.authorization        
+
         if (!authHeader) {
             return res.status(410).json({
                 message: "You must send a valid token!",
@@ -11,10 +12,10 @@ export const middlewareToken = async(req, res, next) => {
             })
         }
 
-        const token = authHeader.split(' ').pop();
-        const payload = await verifyJwt(token);
+        const token = authHeader.split(' ').pop()
+        const payload = await verifyJwt(token)
 
-        const user = await Users.findOne({ _id: payload.id_User });
+        const user = await Users.findOne({ _id: payload.idUser })
         if (!user) {
             return res.status(410).json({
                 message: "User not found",
@@ -22,11 +23,11 @@ export const middlewareToken = async(req, res, next) => {
             })
         }
 
-        req.user = user;
+        req.user = user
 
         next();
     } catch (error) {
-        console.log(error);
+        console.log(error)
         return res.status(410).json({
             message: "There was an error trying to verify token",
             code: 413

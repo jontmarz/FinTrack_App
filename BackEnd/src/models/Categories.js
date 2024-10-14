@@ -12,7 +12,7 @@ export const CategoriesSchema = new Schema({
     },
     type: {
         type: String,
-        enum: ["income", "Expense"],
+        enum: ["Income", "Expense"],
         required: true,
     },
     description: {

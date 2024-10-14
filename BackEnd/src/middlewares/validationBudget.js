@@ -1,6 +1,6 @@
-import { validationResult, body } from "express-validator";
-import { Categories } from "../models/Categories";
-import { Users } from "../models/Users";
+import { validationResult, body } from "express-validator"
+import { Categories } from "../models/Categories.js"
+import { Users } from "../models/Users.js"
 
 export const validationExpress = (req, res, next) => {
     const errors = validationResult(req)
@@ -43,6 +43,7 @@ export const validateBudgetFields = [
 export const validateCategoryFields = [
     body('name', 'Category name is required').trim().isString().notEmpty(),
     body('type', 'Category type must be either Income or Expenses').isIn(['Income', 'Expense']),
+    body('description', 'Type the category description').optional().trim().isString(),
     body('parentCategory', 'Invalid parent category ID').optional().isMongoId(),
     (req, res, next) => {
         const errors = validationResult(req)
@@ -53,6 +54,7 @@ export const validateCategoryFields = [
                 message: 'Validation error in category fields'
             });
         }
+        next()
     }
 ]
 
@@ -74,6 +76,7 @@ export const validateExpenseFields = [
                 message: 'Validation error in expense fields'
             });
         }
+        next()
     }
 ]
 
@@ -96,5 +99,6 @@ export const validateIncomeFields = [
                 message: 'Validation error in income fields'
             });
         }
+        next()
     }
 ]

@@ -1,10 +1,17 @@
-import { Categories } from "../models/Categories"
+import { Categories } from "../models/Categories.js"
+import { getPayload, decodeJwt } from "../config/jwtAuth.js"
+
 
 export const createGlobalCategory = async (req, res) => {
     const { name, type, description } = req.body
+    const token = req.headers.authorization.split(' ').pop();
+    const payload = await decodeJwt(token);
+    // const payload = getPayload(req)
+    console.log(payload.userId); // me mueastra el payload.userId undefined. Verificar
+    
 
     try {
-        const category = new Categories({ name, type, description, parentCategory: null });
+        const category = new Categories({ name, type, description, parentCategory: null, userId: payload.userId });
         const save = await category.save();
         return res.status(201).json({
             code: 213,
