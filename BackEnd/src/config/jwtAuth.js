@@ -37,6 +37,19 @@ export const decodeJwt = async ( token ) =>{
     }
 }
 
+// SAVE TOKEN IN THE DATABASE
+export const saveToken = async ( userId, token ) =>{
+    try {
+        await userTokenSchema.findOneAndUpdate(
+            { userId: userId },
+            { token: token, expiresAt: new Date(Date.now() + 5 * 60 * 60 * 1000) }, // 5 hours
+            { upsert: true }
+        )
+    } catch (error) {
+        throw new Error ( "Error saving the Token " )
+    }
+}
+
 // GET PAYLOAD FROM TOKEN
 export const getPayload = async (req) => {
     const token = req.headers.authorization.split(' ').pop()

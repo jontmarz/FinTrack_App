@@ -1,13 +1,14 @@
 import { Users } from '../models/Users.js'
 import { FinPer } from '../models/FinPer.js'
-import { generateJwt, decodeJwt } from '../config/jwtAuth.js'
+import { UserToken } from '../models/userToken.js'
+import { generateJwt, decodeJwt, saveToken } from '../config/jwtAuth.js'
 
 // REGISTER USER FUNCTION
 export const singupUser = async (req, res) => {
     try {
         const request = { ...req.body }
 
-        const users = await Users.find()
+        const users = await Users.find({})
         // Verify if there are users in the database
         if (users.length > 0) {
             // Verify if the email is already in use
@@ -29,11 +30,20 @@ export const singupUser = async (req, res) => {
         await user.save()
 
         const payload = {
-            'idUser': user._id,
+            'userId': user._id,
             'role': user.role
         }
 
         const { generatedToken, expiresIn } = await generateJwt(payload)
+
+        // Save the token in the userToken Collection
+        await UserToken.findOneAndUpdate(
+            { userId: user._id },
+            { token: generatedToken, expiresAt: new Date(Date.now() + 5 * 60 * 60 * 1000) }, // 5 hours
+            { upsert: true }
+        )
+
+        // saveToken(user._id, generatedToken) verificar si esta función remplaza el método anterior
 
         // Return the response
         return res.status(200).json({
@@ -70,11 +80,19 @@ export const loginUser = async (req, res) => {
 
         // Create the payload
         const payload = {
-            'idUser': user._id,
+            'userId': user._id,
             'role': user.role
         }
 
         const { generatedToken, expiresIn } = await generateJwt(payload)
+
+        await UserToken.findOneAndUpdate(
+            { userId: user._id },
+            { token: generatedToken, expiresAt: new Date(Date.now() + 5 * 60 * 60 * 1000) }, // 5 hours
+            { upsert: true }
+        )
+
+        // saveToken(user._id, generatedToken) verificar si esta función remplaza el método anterior
 
         if (user.role === 'SuperUser') {
             return res.status(200).json({
@@ -151,12 +169,22 @@ export const deleteUser = async (res, req) => {
 }
 
 // LOGOUT USERS FUNCTION
-export const logOutUser = () => {
+export const logOutUser = async ( req, res ) => {
     try {
-        res.clearCookie('refreshCookies')
+        const token = req.headers['authorization']?.split(' ')[1]?.trim()
+
+        console.log(token);
+        if (token) {
+            const userToken = await UserToken.findOne({ token })
+            
+            if (userToken) {
+                console.log('encontró el token')
+                await UserToken.findOneAndDelete({_id: userToken._id})
+            }
+        }
         return res.status(210).json({
             code: 210,
-            message: { ok: true}
+            message: 'User logged out successfully'
         })
     } catch (e) {
         return res.status(500).json({
