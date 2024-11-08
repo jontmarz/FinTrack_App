@@ -7,17 +7,24 @@ export const createGlobalCategory = async (req, res) => {
     const token = req.headers.authorization.split(' ').pop();
     const payload = await decodeJwt(token);
     // const payload = getPayload(req)
-    console.log(payload.idUser); // me mueastra el payload.userId undefined. Verificar
     
-
     try {
-        const category = new Categories({ name, type, description, parentCategory: null, userId: payload.idUser });
-        const save = await category.save();
-        return res.status(201).json({
-            code: 213,
-            message: 'Category created successfully',
-            category,
-        });
+        const categoryName = new Categories.findOne({ name })
+        if (categoryName) {
+            return res.status(400).json({
+                code: 444,
+                message: 'Parent category already exists',
+            });
+        } else {
+            const category = new Categories({ name, type, description, parentCategory: null, userId: payload.userId });
+            const save = await category.save();
+            return res.status(201).json({
+                code: 213,
+                message: 'Category created successfully',
+                category,
+            })
+        }
+
     } catch (e) {
         return res.status(500).json({
             code: 504,
@@ -30,7 +37,7 @@ export const createSubCategory = async (req, res) => {
     const { name, parentCategory, type, description, userId } = req.body
 
     try {
-        const parentCat = new Categories.findById(parentCategory);
+        const parentCat = await Categories.findById(parentCategory)
         if (!parentCat) {
             return res.status(400).json({
                 code: 443,
@@ -38,7 +45,7 @@ export const createSubCategory = async (req, res) => {
             });
         }
 
-        const category = new Categories({ name, parentCategory, type, description, userId });
+        const category = new Categories({ name, parentCategory, type, description, userId })
         const save = await category.save();
 
         return res.status(201).json({
@@ -56,7 +63,7 @@ export const createSubCategory = async (req, res) => {
 
 export const getGlobalCategories = async (req, res) => {
     try {
-        const categories = await Categories.find({ parentCategory: null, userId: null });
+        const categories = await Categories.find({ parentCategory: null });
         return res.status(200).json({
             code: 215,
             message: 'Global categories fetched successfully',
@@ -71,10 +78,11 @@ export const getGlobalCategories = async (req, res) => {
 }
 
 export const getUserCateogories = async (req, res) => {
-    const { parentCategoryId, userId } = req.params;
+    const { parentCategoryId } = req.params;
+    // const { parentCategoryId, userId } = req.params;
 
     try {
-        const categories = await Category.find({ parentCategory: parentCategoryId, userId })
+        const categories = await Categories.find({ parentCategory: parentCategoryId })
         return res.status(200).json({
             code: 216,
             message: 'User categories fetched successfully',

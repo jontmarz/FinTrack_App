@@ -6,7 +6,7 @@ const router = express.Router()
 
 router.put('/', validateCategoryFields, createGlobalCategory)
 router.put('/sub', validateCategoryFields, createSubCategory)
-router.get('/', validateCategoryFields, getGlobalCategories)
-router.get('/sub', validateCategoryFields, getUserCateogories)
+router.get('/', getGlobalCategories)
+router.get('/sub/:parentCategoryId', getUserCateogories)
 
 export default router

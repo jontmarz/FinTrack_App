@@ -141,7 +141,7 @@ export const deleteUser = async (res, req) => {
         const user = await Users.findByIdAndDelete(id)
         if (!user) {
             return res.status(410),json({
-                message: 'User don´t found',
+                message: 'User not found',
                 code: 410
             })
         }
@@ -173,12 +173,10 @@ export const logOutUser = async ( req, res ) => {
     try {
         const token = req.headers['authorization']?.split(' ')[1]?.trim()
 
-        console.log(token);
         if (token) {
             const userToken = await UserToken.findOne({ token })
             
             if (userToken) {
-                console.log('encontró el token')
                 await UserToken.findOneAndDelete({_id: userToken._id})
             }
         }

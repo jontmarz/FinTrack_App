@@ -14,8 +14,9 @@ export const middlewareToken = async(req, res, next) => {
 
         const token = authHeader.split(' ').pop()
         const payload = await verifyJwt(token)
+        
 
-        const user = await Users.findOne({ _id: payload.idUser })
+        const user = await Users.findOne({ _id: payload.userId })
         if (!user) {
             return res.status(410).json({
                 message: "User not found",

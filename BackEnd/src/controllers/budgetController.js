@@ -30,7 +30,7 @@ export const createBudget = async (req, res) => {
     const payload = getPayload(req)
 
     try {
-        let budget = await Budgets.findOne({user: payload.idUser});
+        let budget = await Budgets.findOne({user: payload.userId});
 
         if(!budget) {
             return res.status(400).json({
@@ -39,7 +39,7 @@ export const createBudget = async (req, res) => {
             })
         } else {
             budget = new Budgets(data)
-            await Budgets.findOneAndUpdate({user: payload.idUser}, budget)
+            await Budgets.findOneAndUpdate({user: payload.userId}, budget)
 
             return res.status(200).json({
                 message: `Data Saved`,
