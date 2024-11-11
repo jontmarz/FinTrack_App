@@ -1,12 +1,14 @@
 import express from "express"
-import { createGlobalCategory, createSubCategory, getGlobalCategories, getUserCateogories } from "../controllers/CategoryController.js"
+import CategoryController from "../controllers/CategoryController.js"
 import { validateCategoryFields } from "../middlewares/validationBudget.js"
 
 const router = express.Router()
 
-router.put('/', validateCategoryFields, createGlobalCategory)
-router.put('/sub', validateCategoryFields, createSubCategory)
-router.get('/', getGlobalCategories)
-router.get('/sub/:parentCategoryId', getUserCateogories)
+router.put('/', validateCategoryFields, CategoryController.createGlobalCategory)
+router.put('/sub', validateCategoryFields, CategoryController.createSubCategory)
+router.get('/', CategoryController.getGlobalCategories)
+router.get('/sub/:parentCategoryId', CategoryController.getUserCateogories)
+router.delete('/:categoryId', CategoryController.deleteCategory)
+router.delete('/:subcategoryId', CategoryController.deleteSubcategory)
 
 export default router

@@ -1,8 +1,8 @@
 import express from 'express';
-import { createIncome } from '../controllers/IncomeController.js'
+import IncomeController from '../controllers/IncomeController.js'
 
 const router = express.Router()
 
-router.put('/', createIncome)
+router.put('/', IncomeController.createIncome)
 
 export default router
