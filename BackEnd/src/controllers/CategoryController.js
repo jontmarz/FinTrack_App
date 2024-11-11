@@ -1,7 +1,6 @@
 import { Categories } from "../models/Categories.js"
 import { decodeJwt } from "../config/jwtAuth.js"
 
-
 class CategoryController {
 
     // Method to create a global category
@@ -84,7 +83,7 @@ class CategoryController {
     }
 
     // Method to get Get User Category
-    static async getUserCateogories (req, res) {
+    static async getSubCategories (req, res) {
         const { parentCategoryId } = req.params
 
         try {
@@ -104,26 +103,29 @@ class CategoryController {
 
     // Method to delete category
     static async deleteCategory(req, res) {
-
-    }
-
-    // Method to delete subcateogry
-    static async deleteSubcategory(req, res) {
         try {
-            const { subcategoryId } = req.params
+            const { categoryId } = req.params
             const token = req.headers.authorization.split(' ').pop()
             const payload = await decodeJwt(token)
             const userId = payload.userId            
 
             // Find the subcategory by ID
-            const category = await Categories.findOne({_id: subcategoryId})
-
-            console.log('userId: '+ userId, 'userIdCat: '+ category.userId)
+            const category = await Categories.findOne({_id: categoryId})
 
             if (!category) {
                 return res.status(400).json({
                     code: 445,
                     message: 'Subcategory not found',
+                })
+            }
+
+            if (category.parentCategory === null) {
+                const relatedCategories = await Categories.find({ parentCategory: category._id })
+
+                return res.status(200).json({
+                    code: 200,
+                    message: "This is a parent category. First, you must delete all childs categories",
+                    relates : relatedCategories
                 })
             }
 
@@ -135,11 +137,12 @@ class CategoryController {
                 })
             } else {
                 // Delete the subcategory
-                await Categories.deleteOne({ _id: subcategoryId })
+                // await Categories.deleteOne({ _id: subcategoryId })
     
                 return res.status(200).json({
                     code: 217,
-                    message: 'Subcategory deleted successfully'
+                    message: 'Subcategory deleted successfully',
+                    category
                 })
             }
 
