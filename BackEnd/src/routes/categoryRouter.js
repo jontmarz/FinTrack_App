@@ -9,6 +9,6 @@ router.put('/sub', validateCategoryFields, CategoryController.createSubCategory)
 router.get('/', CategoryController.getGlobalCategories)
 router.get('/sub/:parentCategoryId', CategoryController.getUserCateogories)
 router.delete('/:categoryId', CategoryController.deleteCategory)
-router.delete('/:subcategoryId', CategoryController.deleteSubcategory)
+router.delete('/:subcategoryId', CategoryController.deleteCategory)
 
 export default router

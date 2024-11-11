@@ -104,11 +104,6 @@ class CategoryController {
 
     // Method to delete category
     static async deleteCategory(req, res) {
-
-    }
-
-    // Method to delete subcateogry
-    static async deleteSubcategory(req, res) {
         try {
             const { subcategoryId } = req.params
             const token = req.headers.authorization.split(' ').pop()
@@ -117,8 +112,6 @@ class CategoryController {
 
             // Find the subcategory by ID
             const category = await Categories.findOne({_id: subcategoryId})
-
-            console.log('userId: '+ userId, 'userIdCat: '+ category.userId)
 
             if (!category) {
                 return res.status(400).json({
