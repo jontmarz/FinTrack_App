@@ -113,6 +113,9 @@ class CategoryController {
             // Find the subcategory by ID
             const category = await Categories.findOne({_id: subcategoryId})
 
+            console.log(category)
+            
+
             if (!category) {
                 return res.status(400).json({
                     code: 445,
@@ -128,7 +131,7 @@ class CategoryController {
                 })
             } else {
                 // Delete the subcategory
-                await Categories.deleteOne({ _id: subcategoryId })
+                // await Categories.deleteOne({ _id: subcategoryId })
     
                 return res.status(200).json({
                     code: 217,
