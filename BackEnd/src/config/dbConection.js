@@ -6,7 +6,7 @@ const connectDB = async () => {
     var server = ''
     switch (process.env.NODE_ENV) {
         case "development":
-            server = ''
+            server = 'MVC'
             break;
         case "production":
             server = process.env.CLUSTER
@@ -16,7 +16,7 @@ const connectDB = async () => {
     }
 
     try {
-      await mongoose.connect(`${process.env.URI_MONGO}/${server}?retryWrites=true&w=majority&appName=MVC"`)
+      await mongoose.connect(`${process.env.URI_MONGO}/?retryWrites=true&w=majority&appName=${server}"`)
         console.log("DATABASE CONEXION SUCESSFULL")
     } catch (e) {
         console.error("ERROR CONEXION :" + e.message);
