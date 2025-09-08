@@ -36,7 +36,7 @@ class CategoryController {
 
     // Method to Create a subcategory
     static async createSubCategory(req, res) {
-        const { name, parentCategory, type, description, userId } = req.body
+        const { name, parentCategory, type, description } = req.body
         const token = req.headers.authorization.split(' ').pop()
         const payload = await decodeJwt(token)
 
